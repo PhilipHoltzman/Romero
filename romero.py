@@ -30,14 +30,21 @@ while not gameExit:
 			gameExit = True
 
 		if event.type == pygame.KEYDOWN:
+			# x axis movement
 			if event.key == pygame.K_LEFT:
 				lead_x_change = -6
-			if event.key == pygame.K_RIGHT:
+				lead_y_change = 0
+			elif event.key == pygame.K_RIGHT:
 				lead_x_change = 6
-			if event.key == pygame.K_UP:
+				lead_y_change = 0
+
+			# y axis movement
+			elif event.key == pygame.K_UP:
 				lead_y_change = -6
-			if event.key == pygame.K_DOWN:
+				lead_x_change = 0
+			elif event.key == pygame.K_DOWN:
 				lead_y_change = 6
+				lead_x_change = 0
 
 	# Stop code for non endless moving mode
 	#	if event.type == pygame.KEYUP:
@@ -46,6 +53,9 @@ while not gameExit:
 	#	if event.type == pygame.KEYUP:
 	#		if event.key == pygame.K_UP or event.key == pygame.K_DOWN:
 	#			lead_y_change = 0
+
+	if lead_x >= 800 or lead_x < 0 or lead_y >= 600 or lead_y <0:
+		gameExit = True
 
 	lead_x += lead_x_change
 	lead_y += lead_y_change
