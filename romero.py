@@ -1,4 +1,5 @@
 import pygame
+import time
 
 pygame.init()
 
@@ -10,63 +11,93 @@ turquoise4 = (0,134,139)
 black = (0,0,0)
 white = (255,255,255)
 
-gameDisplay = pygame.display.set_mode((800,600))
+display_width = 800
+display_height = 600
+
+gameDisplay = pygame.display.set_mode((display_width,display_height))
 pygame.display.set_caption('Snakemero')
 
-
-
-gameExit = False
-
-lead_x = 300
-lead_y = 300
-lead_x_change = 0
-lead_y_change = 0
+block_size = 10
+FPS = 30
 
 clock = pygame.time.Clock()
 
-while not gameExit:
-	for event in pygame.event.get():
-		if event.type == pygame.QUIT:
-			gameExit = True
+font = pygame.font.SysFont(None, 25)
 
-		if event.type == pygame.KEYDOWN:
-			# x axis movement
-			if event.key == pygame.K_LEFT:
-				lead_x_change = -6
-				lead_y_change = 0
-			elif event.key == pygame.K_RIGHT:
-				lead_x_change = 6
-				lead_y_change = 0
-
-			# y axis movement
-			elif event.key == pygame.K_UP:
-				lead_y_change = -6
-				lead_x_change = 0
-			elif event.key == pygame.K_DOWN:
-				lead_y_change = 6
-				lead_x_change = 0
-
-	# Stop code for non endless moving mode
-	#	if event.type == pygame.KEYUP:
-	#		if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
-	#			lead_x_change = 0
-	#	if event.type == pygame.KEYUP:
-	#		if event.key == pygame.K_UP or event.key == pygame.K_DOWN:
-	#			lead_y_change = 0
-
-	if lead_x >= 800 or lead_x < 0 or lead_y >= 600 or lead_y <0:
-		gameExit = True
-
-	lead_x += lead_x_change
-	lead_y += lead_y_change
+def message_to_screen(msg,color):
+	screen_text = font.render(msg, True, color)
+	gameDisplay.blit(screen_text,[display_width / 2,display_height / 2])
 
 
-	gameDisplay.fill(black)
-	pygame.draw.rect(gameDisplay,turquoise4,[lead_x,lead_y,10,10])
-	pygame.display.update()
+def gameLoop():
 
-	clock.tick(15)
+	gameExit = False
+	gameOver = False
+
+	lead_x = display_width / 2
+	lead_y = display_height / 2
+
+	lead_x_change = 0
+	lead_y_change = 0
+	
+	while not gameExit:
+
+		while gameOver == True:
+			gameDisplay.fill(black)
+			message_to_screen('Game Over, press C to play again, and Q to quit..', turquoise1)
+			pygame.display.update()
+
+			for event in pygame.event.get():
+				if event.type == pygame.KEYDOWN:
+					if event.key == pygame.K_q:
+						gameExit = True
+						gameOver = False
+					if event.key == pygame.K_c:
+						gameLoop()
+
+		for event in pygame.event.get():
+			if event.type == pygame.QUIT:
+				gameExit = True
+
+			if event.type == pygame.KEYDOWN:
+				# x axis movement
+				if event.key == pygame.K_LEFT:
+					lead_x_change = -block_size
+					lead_y_change = 0
+				elif event.key == pygame.K_RIGHT:
+					lead_x_change = block_size
+					lead_y_change = 0
+
+				# y axis movement
+				elif event.key == pygame.K_UP:
+					lead_y_change = -block_size
+					lead_x_change = 0
+				elif event.key == pygame.K_DOWN:
+					lead_y_change = block_size
+					lead_x_change = 0
+
+		# Stop code for non endless moving mode
+		#	if event.type == pygame.KEYUP:
+		#		if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
+		#			lead_x_change = 0
+		#	if event.type == pygame.KEYUP:
+		#		if event.key == pygame.K_UP or event.key == pygame.K_DOWN:
+		#			lead_y_change = 0
+
+		if lead_x >= display_width or lead_x < 0 or lead_y >= display_height or lead_y <0:
+			gameOver = True
+
+		lead_x += lead_x_change
+		lead_y += lead_y_change
 
 
-pygame.quit()
-quit()
+		gameDisplay.fill(black)
+		pygame.draw.rect(gameDisplay,turquoise4,[lead_x,lead_y,block_size,block_size])
+		pygame.display.update()
+
+		clock.tick(FPS)
+
+	pygame.quit()
+	quit()
+
+gameLoop()
