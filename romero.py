@@ -26,8 +26,9 @@ clock = pygame.time.Clock()
 
 font = pygame.font.SysFont(None, 25)
 
-def snakemero(lead_x,lead_y,block_size):
-	pygame.draw.rect(gameDisplay,turquoise4,[lead_x,lead_y,block_size,block_size])
+def snakemero(block_size, snakeList):
+	for XnY in snakeList:
+		pygame.draw.rect(gameDisplay,turquoise4,[XnY[0],XnY[1],block_size,block_size])
 
 
 
@@ -46,6 +47,9 @@ def gameLoop():
 
 	lead_x_change = 0
 	lead_y_change = 0
+
+	snakeList = []
+	snakeLength = 1
 
 	randCigX = round(random.randrange(0, display_width - block_size) / 10.0) * 10.0
 	randCigY = round(random.randrange(0, display_height - block_size) / 10.0) * 10.0
@@ -106,9 +110,21 @@ def gameLoop():
 		lead_y += lead_y_change
 
 
+
 		gameDisplay.fill(black)
 		pygame.draw.rect(gameDisplay,turquoise1,[randCigX,randCigY,block_size,block_size])
-		snakemero(lead_x,lead_y,block_size)
+		
+		
+		snakeHead = []
+		snakeHead.append(lead_x)
+		snakeHead.append(lead_y)
+		snakeList.append(snakeHead)
+
+		if len(snakeList) > snakeLength:
+			del snakeList[0]
+
+		snakemero(block_size, snakeList)
+		
 		pygame.display.update()
 
 		if lead_x == randCigX and lead_y == randCigY:
