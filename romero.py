@@ -1,5 +1,7 @@
 import pygame
 import time
+import random
+
 
 pygame.init()
 
@@ -39,6 +41,9 @@ def gameLoop():
 
 	lead_x_change = 0
 	lead_y_change = 0
+
+	randCigX = random.randrange(0, display_width - block_size)
+	randCigY = random.randrange(0, display_height - block_size)
 	
 	while not gameExit:
 
@@ -92,6 +97,7 @@ def gameLoop():
 
 
 		gameDisplay.fill(black)
+		pygame.draw.rect(gameDisplay,turquoise1,[randCigX,randCigY,block_size,block_size])
 		pygame.draw.rect(gameDisplay,turquoise4,[lead_x,lead_y,block_size,block_size])
 		pygame.display.update()
 
