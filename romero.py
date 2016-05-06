@@ -26,6 +26,11 @@ clock = pygame.time.Clock()
 
 font = pygame.font.SysFont(None, 25)
 
+def snakemero(lead_x,lead_y,block_size):
+	pygame.draw.rect(gameDisplay,turquoise4,[lead_x,lead_y,block_size,block_size])
+
+
+
 def message_to_screen(msg,color):
 	screen_text = font.render(msg, True, color)
 	gameDisplay.blit(screen_text,[display_width / 2,display_height / 2])
@@ -42,8 +47,9 @@ def gameLoop():
 	lead_x_change = 0
 	lead_y_change = 0
 
-	randCigX = random.randrange(0, display_width - block_size)
-	randCigY = random.randrange(0, display_height - block_size)
+	randCigX = round(random.randrange(0, display_width - block_size) / 10.0) * 10.0
+	randCigY = round(random.randrange(0, display_height - block_size) / 10.0) * 10.0
+
 	
 	while not gameExit:
 
@@ -89,8 +95,12 @@ def gameLoop():
 		#		if event.key == pygame.K_UP or event.key == pygame.K_DOWN:
 		#			lead_y_change = 0
 
+
+		# Logic for border detection
 		if lead_x >= display_width or lead_x < 0 or lead_y >= display_height or lead_y <0:
 			gameOver = True
+
+
 
 		lead_x += lead_x_change
 		lead_y += lead_y_change
@@ -98,8 +108,14 @@ def gameLoop():
 
 		gameDisplay.fill(black)
 		pygame.draw.rect(gameDisplay,turquoise1,[randCigX,randCigY,block_size,block_size])
-		pygame.draw.rect(gameDisplay,turquoise4,[lead_x,lead_y,block_size,block_size])
+		snakemero(lead_x,lead_y,block_size)
 		pygame.display.update()
+
+		if lead_x == randCigX and lead_y == randCigY:
+			print('pufffffff')
+			randCigX = round(random.randrange(0, display_width - block_size) / 10.0) * 10.0
+			randCigY = round(random.randrange(0, display_height - block_size) / 10.0) * 10.0
+	
 
 		clock.tick(FPS)
 
