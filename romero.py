@@ -123,12 +123,18 @@ def gameLoop():
 		if len(snakeList) > snakeLength:
 			del snakeList[0]
 
+		# if we are hitting our own snake
+		for eachSegment in snakeList[:-1]:
+			if eachSegment == snakeHead:
+				gameOver = True
+
 		snakemero(block_size, snakeList)
 		
 		pygame.display.update()
 
 		if lead_x == randCigX and lead_y == randCigY:
 			print('pufffffff')
+			snakeLength += 1
 			randCigX = round(random.randrange(0, display_width - block_size) / 10.0) * 10.0
 			randCigY = round(random.randrange(0, display_height - block_size) / 10.0) * 10.0
 	
