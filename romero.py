@@ -51,8 +51,8 @@ def gameLoop():
 	snakeList = []
 	snakeLength = 1
 
-	randCigX = round(random.randrange(0, display_width - block_size) / 10.0) * 10.0
-	randCigY = round(random.randrange(0, display_height - block_size) / 10.0) * 10.0
+	randCigX = round(random.randrange(0, display_width - block_size)) # / 10.0) * 10.0
+	randCigY = round(random.randrange(0, display_height - block_size)) # / 10.0) * 10.0
 
 	
 	while not gameExit:
@@ -63,6 +63,9 @@ def gameLoop():
 			pygame.display.update()
 
 			for event in pygame.event.get():
+				if event.type == pygame.QUIT:
+					gameExit = True
+					gameOver = False
 				if event.type == pygame.KEYDOWN:
 					if event.key == pygame.K_q:
 						gameExit = True
@@ -112,7 +115,10 @@ def gameLoop():
 
 
 		gameDisplay.fill(black)
-		pygame.draw.rect(gameDisplay,turquoise1,[randCigX,randCigY,block_size,block_size])
+
+		cigThickness = 20
+
+		pygame.draw.rect(gameDisplay,turquoise1,[randCigX,randCigY,cigThickness,cigThickness])
 		
 		
 		snakeHead = []
@@ -123,7 +129,7 @@ def gameLoop():
 		if len(snakeList) > snakeLength:
 			del snakeList[0]
 
-		# if we are hitting our own snake
+		# if we are hitting our own snakemero
 		for eachSegment in snakeList[:-1]:
 			if eachSegment == snakeHead:
 				gameOver = True
@@ -132,12 +138,30 @@ def gameLoop():
 		
 		pygame.display.update()
 
-		if lead_x == randCigX and lead_y == randCigY:
-			print('pufffffff')
-			snakeLength += 1
-			randCigX = round(random.randrange(0, display_width - block_size) / 10.0) * 10.0
-			randCigY = round(random.randrange(0, display_height - block_size) / 10.0) * 10.0
-	
+
+		
+##		if lead_x >= randCigX and lead_x <= randCigX + cigThickness:
+##			if lead_y >= randCigY and lead_y <= randCigY + cigThickness:
+##				print('pufffffff')
+##				snakeLength += 1
+##				randCigX = round(random.randrange(0, display_width - block_size)) # / 10.0)   * 10.0
+##				randCigY = round(random.randrange(0, display_height - block_size)) # / 10.0)  * 10.0
+		
+
+		# collision detection
+		if lead_x > randCigX and lead_x < randCigX + cigThickness or lead_x + block_size > randCigX and lead_x + block_size < randCigX + cigThickness:
+			
+			if lead_y > randCigY and lead_y < randCigY + cigThickness:
+				snakeLength += 1
+				randCigX = round(random.randrange(0, display_width - block_size)) # / 10.0)   * 10.0
+				randCigY = round(random.randrange(0, display_height - block_size)) # / 10.0)  * 10.0
+
+			elif lead_y + block_size > randCigY and lead_y + block_size < randCigY + cigThickness:
+				snakeLength += 1
+				randCigX = round(random.randrange(0, display_width - block_size)) # / 10.0)   * 10.0
+				randCigY = round(random.randrange(0, display_height - block_size)) # / 10.0)  * 10.0
+
+
 
 		clock.tick(FPS)
 
