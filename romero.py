@@ -2,35 +2,61 @@ import pygame
 import time
 import random
 
-
+# boiler plate for all pygame calls
 pygame.init()
 
-# pallette 
+# pallette for the game 
 turquoise1 = (0,245,255)
 turquoise2 = (0,229,238)
 turquoise3 = (0,197,205)
 turquoise4 = (0,134,139)
+romeroColor = (189,173,184)
 black = (0,0,0)
 white = (255,255,255)
 
+ # play area generated or res
 display_width = 800
 display_height = 600
-
+ 
+# create the display or "Canvas" and title screen 
 gameDisplay = pygame.display.set_mode((display_width,display_height))
 pygame.display.set_caption('Snakemero')
 
+
+img = pygame.image.load('head.png')
+
+
 block_size = 16
-FPS = 30
+FPS = 25
+
+direction = "right"
+
 
 clock = pygame.time.Clock()
 
 font = pygame.font.SysFont(None, 25)
 
+# the snakemero move screen
 def snakemero(block_size, snakeList):
-	for XnY in snakeList:
-		pygame.draw.rect(gameDisplay,turquoise4,[XnY[0],XnY[1],block_size,block_size])
 
+	if direction == "right":
+		head = pygame.transform.rotate(img,270)
 
+	if direction == "left":
+		head = pygame.transform.rotate(img,90)
+
+	if direction == "up":
+		head = img
+
+	if direction == "down":
+		head = pygame.transform.rotate(img,180)
+
+	gameDisplay.blit(head, (snakeList[-1][0], snakeList[-1][1]))
+
+	for XnY in snakeList[:-1]:
+		pygame.draw.rect(gameDisplay,romeroColor,[XnY[0],XnY[1],block_size,block_size])
+
+# redundant text object passthrough
 def text_objects(text, color):
 	textSurface = font.render(text,True, color)
 	return textSurface, textSurface.get_rect()
@@ -44,7 +70,11 @@ def message_to_screen(msg,color):
 	gameDisplay.blit(textSurf,textRect)
 
 
+
+# main gameloop
 def gameLoop():
+
+	global direction
 
 	gameExit = False
 	gameOver = False
@@ -87,17 +117,21 @@ def gameLoop():
 			if event.type == pygame.KEYDOWN:
 				# x axis movement
 				if event.key == pygame.K_LEFT:
+					direction = "left"
 					lead_x_change = -block_size
 					lead_y_change = 0
 				elif event.key == pygame.K_RIGHT:
+					direction = "right"
 					lead_x_change = block_size
 					lead_y_change = 0
 
 				# y axis movement
 				elif event.key == pygame.K_UP:
+					direction = "up"
 					lead_y_change = -block_size
 					lead_x_change = 0
 				elif event.key == pygame.K_DOWN:
+					direction = "down"
 					lead_y_change = block_size
 					lead_x_change = 0
 
@@ -120,10 +154,11 @@ def gameLoop():
 		lead_y += lead_y_change
 
 
-
+		# background is black
 		gameDisplay.fill(black)
 
-		cigThickness = 20
+		#thickness of cigarette power-up
+		cigThickness = 24
 
 		pygame.draw.rect(gameDisplay,turquoise1,[randCigX,randCigY,cigThickness,cigThickness])
 		
