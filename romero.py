@@ -23,18 +23,66 @@ gameDisplay = pygame.display.set_mode((display_width,display_height))
 pygame.display.set_caption('Snakemero')
 
 
+icon = pygame.image.load('icon.png')
+pygame.display.set_icon(icon)
+
+
 img = pygame.image.load('head.png')
 
 
 block_size = 16
 FPS = 25
 
-direction = "right"
+direction = "up"
 
 
 clock = pygame.time.Clock()
 
-font = pygame.font.SysFont(None, 25)
+smallFont = pygame.font.SysFont("comicsansms", 25)
+medFont = pygame.font.SysFont("comicsansms", 50)
+largeFont = pygame.font.SysFont("comicsansms", 80)
+
+
+def game_intro():
+
+	intro = True
+
+	while intro:
+
+
+		for event in pygame.event.get():
+			# if player closes window it quits
+			if event.type == pygame.QUIT:
+				pygame.quit()
+				quit()
+			# press c down and end intro..
+			if event.type == pygame.KEYDOWN:
+				if event.key == pygame.K_c:
+					intro = False
+				if event.key == pygame.K_q:
+					pygame.quit()
+					quit()
+
+
+		gameDisplay.fill(black)
+		message_to_screen("Welcome to Snakemero",
+							romeroColor,
+							-100,
+							"large")
+
+		message_to_screen(".. the more you smoke and collect the longer you get.. ",
+							romeroColor,
+							-70,)
+
+		message_to_screen(" The objective is to smoke cigarettes and collect Modafinil for later use",
+							romeroColor,
+							-30)
+		pygame.display.update()
+		clock.tick(10)
+
+
+
+
 
 # the snakemero move screen
 def snakemero(block_size, snakeList):
@@ -57,16 +105,19 @@ def snakemero(block_size, snakeList):
 		pygame.draw.rect(gameDisplay,romeroColor,[XnY[0],XnY[1],block_size,block_size])
 
 # redundant text object passthrough
-def text_objects(text, color):
-	textSurface = font.render(text,True, color)
+def text_objects(text, color, size):
+	if size == "small":
+		textSurface = smallFont.render(text,True, color)
+	elif size == "medium":
+		textSurface = medFont.render(text,True, color)
+	elif size == "large":
+		textSurface = largeFont.render(text,True, color)
 	return textSurface, textSurface.get_rect()
 
 
-def message_to_screen(msg,color):
-	textSurf, textRect = text_objects(msg, color)
-	#screen_text = font.render(msg, True, color)
-	#gameDisplay.blit(screen_text,[display_width / 2,display_height / 2])
-	textRect.center = (display_width / 2), (display_height / 2)
+def message_to_screen(msg,color,y_displace = 0, size = "small"):
+	textSurf, textRect = text_objects(msg, color, size)
+	textRect.center = (display_width / 2), (display_height / 2) + y_displace
 	gameDisplay.blit(textSurf,textRect)
 
 
@@ -96,7 +147,8 @@ def gameLoop():
 
 		while gameOver == True:
 			gameDisplay.fill(black)
-			message_to_screen('Game Over, press C to play again, and Q to quit..', turquoise1)
+			message_to_screen('Game Over', turquoise1, -50, size = "large")
+			message_to_screen('Press C to play again or Q to quit.. ', romeroColor, 50, size = "medium")
 			pygame.display.update()
 
 			for event in pygame.event.get():
@@ -210,4 +262,5 @@ def gameLoop():
 	pygame.quit()
 	quit()
 
+game_intro()
 gameLoop()
