@@ -26,10 +26,14 @@ pygame.display.set_caption('Snakemero')
 icon = pygame.image.load('icon.png')
 pygame.display.set_icon(icon)
 
-
+#snakehead
 img = pygame.image.load('head.png')
 
+#cig image
+cig = pygame.image.load('cig1.png')
 
+#thickness of cigarette power-up
+cigThickness = 24
 block_size = 16
 FPS = 25
 
@@ -81,6 +85,11 @@ def game_intro():
 		clock.tick(10)
 
 
+
+def randItemGen():
+	randCigX = round(random.randrange(0, display_width - cigThickness)) # / 10.0)   * 10.0
+	randCigY = round(random.randrange(0, display_height - cigThickness)) # / 10.0)  * 10.0
+	return randCigX, randCigY
 
 
 
@@ -139,9 +148,7 @@ def gameLoop():
 	snakeList = []
 	snakeLength = 1
 
-	randCigX = round(random.randrange(0, display_width - block_size)) # / 10.0) * 10.0
-	randCigY = round(random.randrange(0, display_height - block_size)) # / 10.0) * 10.0
-
+	randCigX, randCigY = randItemGen()
 	
 	while not gameExit:
 
@@ -209,11 +216,10 @@ def gameLoop():
 		# background is black
 		gameDisplay.fill(black)
 
-		#thickness of cigarette power-up
-		cigThickness = 24
-
-		pygame.draw.rect(gameDisplay,turquoise1,[randCigX,randCigY,cigThickness,cigThickness])
 		
+
+		#pygame.draw.rect(gameDisplay,turquoise1,[randCigX,randCigY,cigThickness,cigThickness])
+		gameDisplay.blit(cig, (randCigX, randCigY))
 		
 		snakeHead = []
 		snakeHead.append(lead_x)
@@ -247,13 +253,11 @@ def gameLoop():
 			
 			if lead_y > randCigY and lead_y < randCigY + cigThickness:
 				snakeLength += 1
-				randCigX = round(random.randrange(0, display_width - block_size)) # / 10.0)   * 10.0
-				randCigY = round(random.randrange(0, display_height - block_size)) # / 10.0)  * 10.0
+				randCigX, randCigY = randItemGen()
 
 			elif lead_y + block_size > randCigY and lead_y + block_size < randCigY + cigThickness:
 				snakeLength += 1
-				randCigX = round(random.randrange(0, display_width - block_size)) # / 10.0)   * 10.0
-				randCigY = round(random.randrange(0, display_height - block_size)) # / 10.0)  * 10.0
+				rrandCigX, randCigY = randItemGen()
 
 
 
