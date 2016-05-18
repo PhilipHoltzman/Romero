@@ -84,6 +84,10 @@ def game_intro():
 		pygame.display.update()
 		clock.tick(10)
 
+def score(score):
+	text = smallFont.render("Score: " + str(score), True, turquoise1)
+	gameDisplay.blit(text, [0,0])
+
 
 
 def randItemGen():
@@ -235,6 +239,8 @@ def gameLoop():
 				gameOver = True
 
 		snakemero(block_size, snakeList)
+
+		score(snakeLength-1)
 		
 		pygame.display.update()
 
