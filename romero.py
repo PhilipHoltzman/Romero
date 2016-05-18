@@ -22,30 +22,71 @@ display_height = 600
 gameDisplay = pygame.display.set_mode((display_width,display_height))
 pygame.display.set_caption('Snakemero')
 
-
+# game UI/OS icon
 icon = pygame.image.load('icon.png')
 pygame.display.set_icon(icon)
 
 #snakehead
-img = pygame.image.load('head.png')
+rhead = pygame.image.load('head.png')
 
-#cig image
-cig = pygame.image.load('cig1.png')
+#cig images
+cig1 = pygame.image.load('cig1.png')
+cig2 = pygame.image.load('cig2.png')
+cig3 = pygame.image.load('cig3.png')
+cig4 = pygame.image.load('cig4.png')
 
-#thickness of cigarette power-up
+#thickness of cigarette 
 cigThickness = 24
+
+#player block size
 block_size = 16
+
+
 FPS = 25
 
+# setting starting player direction
 direction = "up"
 
 
 clock = pygame.time.Clock()
 
+
+# font variables
 smallFont = pygame.font.SysFont("comicsansms", 25)
 medFont = pygame.font.SysFont("comicsansms", 50)
 largeFont = pygame.font.SysFont("comicsansms", 80)
 
+
+def splash():
+
+	splash = True
+
+	while splash:
+
+
+		for event in pygame.event.get():
+			# if player closes window it quits
+			if event.type == pygame.QUIT:
+				pygame.quit()
+				quit()
+			# press c down and end intro..
+			if event.type == pygame.KEYDOWN:
+				if event.key == pygame.K_c:
+					splash = False
+				if event.key == pygame.K_q:
+					pygame.quit()
+					quit()
+
+		gameDisplay.fill(black)
+		message_to_screen("SPLASH",
+							romeroColor,
+							-100,
+							"large")
+
+		
+
+		pygame.display.update()
+		clock.tick(10)
 
 def game_intro():
 
@@ -101,16 +142,16 @@ def randItemGen():
 def snakemero(block_size, snakeList):
 
 	if direction == "right":
-		head = pygame.transform.rotate(img,270)
+		head = pygame.transform.rotate(rhead,270)
 
 	if direction == "left":
-		head = pygame.transform.rotate(img,90)
+		head = pygame.transform.rotate(rhead,90)
 
 	if direction == "up":
-		head = img
+		head = rhead
 
 	if direction == "down":
-		head = pygame.transform.rotate(img,180)
+		head = pygame.transform.rotate(rhead,180)
 
 	gameDisplay.blit(head, (snakeList[-1][0], snakeList[-1][1]))
 
@@ -223,7 +264,7 @@ def gameLoop():
 		
 
 		#pygame.draw.rect(gameDisplay,turquoise1,[randCigX,randCigY,cigThickness,cigThickness])
-		gameDisplay.blit(cig, (randCigX, randCigY))
+		gameDisplay.blit(cig1, (randCigX, randCigY))
 		
 		snakeHead = []
 		snakeHead.append(lead_x)
@@ -271,6 +312,17 @@ def gameLoop():
 
 	pygame.quit()
 	quit()
+# function call zone
 
+
+splash()
 game_intro()
 gameLoop()
+
+
+
+
+
+
+
+
