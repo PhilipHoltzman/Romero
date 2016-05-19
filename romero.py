@@ -4,6 +4,7 @@ import random
 
 # boiler plate for all pygame calls
 pygame.init()
+pygame.mixer.init()
 
 # pallette for the game 
 turquoise1 = (0,245,255)
@@ -35,11 +36,23 @@ cig2 = pygame.image.load('cig2.png')
 cig3 = pygame.image.load('cig3.png')
 cig4 = pygame.image.load('cig4.png')
 
+# background image for splash
+lvlBG = pygame.image.load('lvlBG.png')
+splashBG = pygame.image.load('splashBG.png')
+
+
+
+# loading sounds
+slug = pygame.mixer.Sound('slug.ogg')
+
+
+
 #thickness of cigarette 
 cigThickness = 24
 
 #player block size
 block_size = 16
+
 
 
 FPS = 25
@@ -61,6 +74,8 @@ def splash():
 
 	splash = True
 
+	slug.play()
+
 	while splash:
 
 
@@ -77,14 +92,8 @@ def splash():
 					pygame.quit()
 					quit()
 
-		gameDisplay.fill(black)
-		message_to_screen("SPLASH",
-							romeroColor,
-							-100,
-							"large")
-
-		
-
+		# display bg image			
+		gameDisplay.blit(splashBG, (0,0))
 		pygame.display.update()
 		clock.tick(10)
 
@@ -138,7 +147,7 @@ def randItemGen():
 
 
 
-# the snakemero move screen
+# the snakemero move logic
 def snakemero(block_size, snakeList):
 
 	if direction == "right":
@@ -259,7 +268,7 @@ def gameLoop():
 
 
 		# background is black
-		gameDisplay.fill(black)
+		gameDisplay.blit(lvlBG, (0,0))
 
 		
 
@@ -316,6 +325,8 @@ def gameLoop():
 
 
 splash()
+pygame.mixer.music.load("axyMenu.ogg")
+pygame.mixer.music.play(-1,0.0)
 game_intro()
 gameLoop()
 
