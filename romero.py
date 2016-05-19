@@ -36,14 +36,28 @@ cig2 = pygame.image.load('cig2.png')
 cig3 = pygame.image.load('cig3.png')
 cig4 = pygame.image.load('cig4.png')
 
+
+# UI images
+
+playButton = pygame.image.load('playB.png')
+playButtonMod = pygame.image.load('playBmod.png')
+controlButton = pygame.image.load('controlsB.png')
+controlButtonMod = pygame.image.load('controlsBmod.png')
+quitButton = pygame.image.load('quitB.png')
+quitButtonMod = pygame.image.load('quitBmod.png')
+
+
 # background image for splash
 lvlBG = pygame.image.load('lvlBG.png')
 splashBG = pygame.image.load('splashBG.png')
+gameover = pygame.image.load('gameover.png')
+titleScreen = pygame.image.load('title.png')
 
 
 
 # loading sounds
 slug = pygame.mixer.Sound('slug.ogg')
+scream = pygame.mixer.Sound('scream.ogg')
 
 
 
@@ -117,20 +131,41 @@ def game_intro():
 					pygame.quit()
 					quit()
 
+		cursor = pygame.mouse.get_pos()
+		click = pygame.mouse.get_pressed()
 
-		gameDisplay.fill(black)
-		message_to_screen("Welcome to Snakemero",
-							romeroColor,
-							-100,
-							"large")
 
-		message_to_screen(".. the more you smoke and collect the longer you get.. ",
-							romeroColor,
-							-70,)
+		gameDisplay.blit(titleScreen, (0,0))
 
-		message_to_screen(" The objective is to smoke cigarettes and collect Modafinil for later use",
-							romeroColor,
-							-30)
+		# play button display
+		
+		if 406  < cursor[0] < 598 and 425  < cursor[1] < 469:
+			gameDisplay.blit(playButtonMod, (406,425))
+			if click[0] == 1:
+				print('play')
+				intro = False
+		else:
+			gameDisplay.blit(playButton, (406,425))
+			
+		# control button display
+		if 404  < cursor[0] < 604 and 488  < cursor[1] < 516:
+			gameDisplay.blit(controlButtonMod, (404,488))
+			if click[0] == 1:
+				print('controls')
+		else:
+			gameDisplay.blit(controlButton, (404,488))
+
+		# quit button
+		if 628  < cursor[0] < 752 and 397  < cursor[1] < 524:
+			gameDisplay.blit(quitButtonMod, (628,397))
+			if click[0] == 1:
+				print('quit')
+				pygame.quit()
+				quit()
+		else:
+			gameDisplay.blit(quitButton, (628,397))
+			
+		
 		pygame.display.update()
 		clock.tick(10)
 
@@ -188,6 +223,11 @@ def message_to_screen(msg,color,y_displace = 0, size = "small"):
 # main gameloop
 def gameLoop():
 
+
+	pygame.mixer.music.stop()
+	pygame.mixer.music.load("axyPlay.ogg")
+	pygame.mixer.music.play(-1,0.0)
+
 	global direction
 
 	gameExit = False
@@ -207,9 +247,7 @@ def gameLoop():
 	while not gameExit:
 
 		while gameOver == True:
-			gameDisplay.fill(black)
-			message_to_screen('Game Over', turquoise1, -50, size = "large")
-			message_to_screen('Press C to play again or Q to quit.. ', romeroColor, 50, size = "medium")
+			gameDisplay.blit(gameover, (0,0))
 			pygame.display.update()
 
 			for event in pygame.event.get():
@@ -259,6 +297,8 @@ def gameLoop():
 
 		# Logic for border detection
 		if lead_x >= display_width or lead_x < 0 or lead_y >= display_height or lead_y <0:
+			pygame.mixer.music.stop()
+			scream.play()
 			gameOver = True
 
 
@@ -286,6 +326,8 @@ def gameLoop():
 		# if we are hitting our own snakemero
 		for eachSegment in snakeList[:-1]:
 			if eachSegment == snakeHead:
+				pygame.mixer.music.stop()
+				scream.play()
 				gameOver = True
 
 		snakemero(block_size, snakeList)
@@ -304,7 +346,7 @@ def gameLoop():
 ##				randCigY = round(random.randrange(0, display_height - block_size)) # / 10.0)  * 10.0
 		
 
-		# collision detection
+		
 		if lead_x > randCigX and lead_x < randCigX + cigThickness or lead_x + block_size > randCigX and lead_x + block_size < randCigX + cigThickness:
 			
 			if lead_y > randCigY and lead_y < randCigY + cigThickness:
