@@ -214,6 +214,16 @@ def randCig2Gen():
 	randCig2Y = round(random.randrange(0, display_height - cigThickness))
 	return randCig2X, randCig2Y
 
+def randCig3Gen():
+	randCig3X = round(random.randrange(0, display_width - cigThickness))
+	randCig3Y = round(random.randrange(0, display_height - cigThickness))
+	return randCig3X, randCig3Y
+
+def randCig4Gen():
+	randCig4X = round(random.randrange(0, display_width - cigThickness))
+	randCig4Y = round(random.randrange(0, display_height - cigThickness))
+	return randCig4X, randCig4Y
+
 
 
 # the snakemero move logic
@@ -279,6 +289,9 @@ def gameLoop():
 	randCigX, randCigY = randItemGen()
 	randModaX, randModaY = randModafinilGen()
 	randCig2X, randCig2Y = randCig2Gen()
+	randCig3X, randCig3Y = randCig3Gen()
+	randCig4X, randCig4Y = randCig4Gen()
+
 	
 	while not gameExit:
 
@@ -348,6 +361,8 @@ def gameLoop():
 		gameDisplay.blit(cig1, (randCigX, randCigY))
 		gameDisplay.blit(modafinil, (randModaX, randModaY))
 		gameDisplay.blit(cig2, (randCig2X, randCig2Y))
+		gameDisplay.blit(cig3, (randCig3X, randCig3Y))
+		gameDisplay.blit(cig4, (randCig4X, randCig4Y))
 		
 		snakeHead = []
 		snakeHead.append(lead_x)
@@ -391,6 +406,29 @@ def gameLoop():
 			elif lead_y + block_size > randCig2Y and lead_y + block_size < randCig2Y + cigThickness:
 				snakeLength += 1
 				randCig2X, randCig2Y = randCig2Gen()
+
+		# cig3 logic
+		if lead_x > randCig3X and lead_x < randCig3X + cigThickness or lead_x + block_size > randCig3X and lead_x + block_size < randCig3X + cigThickness:
+			
+			if lead_y > randCig3Y and lead_y < randCig3Y + cigThickness:
+				snakeLength += 1
+				randCig3X, randCig3Y = randCig3Gen()
+
+			elif lead_y + block_size > randCig3Y and lead_y + block_size < randCig3Y + cigThickness:
+				snakeLength += 1
+				randCig3X, randCig3Y = randCig3Gen()
+
+		# cig4 logic
+		if lead_x > randCig4X and lead_x < randCig4X + cigThickness or lead_x + block_size > randCig4X and lead_x + block_size < randCig4X + cigThickness:
+			
+			if lead_y > randCig4Y and lead_y < randCig4Y + cigThickness:
+				snakeLength += 1
+				randCig4X, randCig4Y = randCig4Gen()
+
+			elif lead_y + block_size > randCig4Y and lead_y + block_size < randCig4Y + cigThickness:
+				snakeLength += 1
+				randCig4X, randCig4Y = randCig4Gen()
+
 		
 		# modafinil logic
 		if lead_x > randModaX and lead_x < randModaX + modafinilThickness or lead_x + block_size > randModaX and lead_x + block_size < randModaX + modafinilThickness:
