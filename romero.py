@@ -16,7 +16,7 @@ romeroColor = (189,173,184)
 black = (0,0,0)
 white = (255,255,255)
 
- # play area generated or res
+# play area generated or res
 display_width = 800
 display_height = 600
  
@@ -79,11 +79,13 @@ block_size = 16
 
 FPS = 25
 
+clock = pygame.time.Clock()
+
 # setting starting player direction
 direction = "up"
 
 
-clock = pygame.time.Clock()
+
 
 
 # font variables
@@ -103,7 +105,6 @@ def splash():
 
 	while splash:
 
-
 		for event in pygame.event.get():
 			# if player closes window it quits
 			if event.type == pygame.QUIT:
@@ -119,8 +120,7 @@ def splash():
 					pygame.quit()
 					quit()
 		if 0  < cursor[0] < 800 and 0  < cursor[1] < 600:
-			if click[0] == 1:
-				print('click..')
+			if event.type == pygame.MOUSEBUTTONDOWN:
 				splash = False
 
 		# display bg image			
@@ -384,6 +384,9 @@ def gameLoop():
 		score(snakeLength-1)
 		
 		pygame.display.update()
+		
+
+		# ITEM LOGIC 
 
 		# cig1 logic
 		if lead_x > randCigX and lead_x < randCigX + cigThickness or lead_x + block_size > randCigX and lead_x + block_size < randCigX + cigThickness:
