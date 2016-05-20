@@ -11,6 +11,7 @@ turquoise1 = (0,245,255)
 turquoise2 = (0,229,238)
 turquoise3 = (0,197,205)
 turquoise4 = (0,134,139)
+red = (255,0,0)
 romeroColor = (189,173,184)
 black = (0,0,0)
 white = (255,255,255)
@@ -36,6 +37,11 @@ cig2 = pygame.image.load('cig2.png')
 cig3 = pygame.image.load('cig3.png')
 cig4 = pygame.image.load('cig4.png')
 
+cigList = [cig1, cig2, cig3, cig4]
+
+# modafinil
+modafinil = pygame.image.load('modafinil.png')
+
 
 # UI images
 
@@ -52,6 +58,7 @@ lvlBG = pygame.image.load('lvlBG.png')
 splashBG = pygame.image.load('splashBG.png')
 gameover = pygame.image.load('gameover.png')
 titleScreen = pygame.image.load('title.png')
+controlScreen = pygame.image.load('controls.png')
 
 
 
@@ -61,8 +68,9 @@ scream = pygame.mixer.Sound('scream.ogg')
 
 
 
-#thickness of cigarette 
+#thickness of objects  
 cigThickness = 24
+modafinilThickness = 24
 
 #player block size
 block_size = 16
@@ -90,6 +98,9 @@ def splash():
 
 	slug.play()
 
+	cursor = pygame.mouse.get_pos()
+	click = pygame.mouse.get_pressed()
+
 	while splash:
 
 
@@ -100,11 +111,17 @@ def splash():
 				quit()
 			# press c down and end intro..
 			if event.type == pygame.KEYDOWN:
-				if event.key == pygame.K_c:
+				if event.key == pygame.K_RETURN:
+					splash = False
+				if event.key == pygame.K_SPACE:
 					splash = False
 				if event.key == pygame.K_q:
 					pygame.quit()
 					quit()
+		if 0  < cursor[0] < 800 and 0  < cursor[1] < 600:
+			if click[0] == 1:
+				print('click..')
+				splash = False
 
 		# display bg image			
 		gameDisplay.blit(splashBG, (0,0))
@@ -147,13 +164,9 @@ def game_intro():
 		else:
 			gameDisplay.blit(playButton, (406,425))
 			
-		# control button display
-		if 404  < cursor[0] < 604 and 488  < cursor[1] < 516:
-			gameDisplay.blit(controlButtonMod, (404,488))
-			if click[0] == 1:
-				print('controls')
-		else:
-			gameDisplay.blit(controlButton, (404,488))
+
+
+		
 
 		# quit button
 		if 628  < cursor[0] < 752 and 397  < cursor[1] < 524:
@@ -164,13 +177,24 @@ def game_intro():
 				quit()
 		else:
 			gameDisplay.blit(quitButton, (628,397))
+
+		# control button display
+		if 404  < cursor[0] < 604 and 488  < cursor[1] < 516:
+			gameDisplay.blit(controlButtonMod, (404,488))
+			if click[0] == 1:
+				print('controls')
+				gameDisplay.blit(controlScreen, (0,0))
+
+
+		else:
+			gameDisplay.blit(controlButton, (404,488))
 			
 		
 		pygame.display.update()
 		clock.tick(10)
 
 def score(score):
-	text = smallFont.render("Score: " + str(score), True, turquoise1)
+	text = smallFont.render("Score: " + str(score), True, red)
 	gameDisplay.blit(text, [0,0])
 
 
@@ -179,6 +203,16 @@ def randItemGen():
 	randCigX = round(random.randrange(0, display_width - cigThickness)) # / 10.0)   * 10.0
 	randCigY = round(random.randrange(0, display_height - cigThickness)) # / 10.0)  * 10.0
 	return randCigX, randCigY
+
+def randModafinilGen():
+	randModaX = round(random.randrange(0, display_width - modafinilThickness))
+	randModaY = round(random.randrange(0, display_height - modafinilThickness))
+	return randModaX, randModaY
+
+def randCig2Gen():
+	randCig2X = round(random.randrange(0, display_width - cigThickness))
+	randCig2Y = round(random.randrange(0, display_height - cigThickness))
+	return randCig2X, randCig2Y
 
 
 
@@ -200,7 +234,7 @@ def snakemero(block_size, snakeList):
 	gameDisplay.blit(head, (snakeList[-1][0], snakeList[-1][1]))
 
 	for XnY in snakeList[:-1]:
-		pygame.draw.rect(gameDisplay,romeroColor,[XnY[0],XnY[1],block_size,block_size])
+		pygame.draw.rect(gameDisplay,romeroColor,[XnY[0],XnY[1],block_size,block_size])   # replace this
 
 # redundant text object passthrough
 def text_objects(text, color, size):
@@ -243,6 +277,8 @@ def gameLoop():
 	snakeLength = 1
 
 	randCigX, randCigY = randItemGen()
+	randModaX, randModaY = randModafinilGen()
+	randCig2X, randCig2Y = randCig2Gen()
 	
 	while not gameExit:
 
@@ -260,6 +296,11 @@ def gameLoop():
 						gameOver = False
 					if event.key == pygame.K_c:
 						gameLoop()
+					if event.key == pygame.K_SPACE:
+						gameLoop()
+					if event.key == pygame.K_RETURN:
+						gameLoop()
+
 
 		for event in pygame.event.get():
 			if event.type == pygame.QUIT:
@@ -286,14 +327,6 @@ def gameLoop():
 					lead_y_change = block_size
 					lead_x_change = 0
 
-		# Stop code for non endless moving mode
-		#	if event.type == pygame.KEYUP:
-		#		if event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT:
-		#			lead_x_change = 0
-		#	if event.type == pygame.KEYUP:
-		#		if event.key == pygame.K_UP or event.key == pygame.K_DOWN:
-		#			lead_y_change = 0
-
 
 		# Logic for border detection
 		if lead_x >= display_width or lead_x < 0 or lead_y >= display_height or lead_y <0:
@@ -307,13 +340,14 @@ def gameLoop():
 		lead_y += lead_y_change
 
 
-		# background is black
+		# background is my background image
 		gameDisplay.blit(lvlBG, (0,0))
 
 		
-
-		#pygame.draw.rect(gameDisplay,turquoise1,[randCigX,randCigY,cigThickness,cigThickness])
+		
 		gameDisplay.blit(cig1, (randCigX, randCigY))
+		gameDisplay.blit(modafinil, (randModaX, randModaY))
+		gameDisplay.blit(cig2, (randCig2X, randCig2Y))
 		
 		snakeHead = []
 		snakeHead.append(lead_x)
@@ -336,17 +370,7 @@ def gameLoop():
 		
 		pygame.display.update()
 
-
-		
-##		if lead_x >= randCigX and lead_x <= randCigX + cigThickness:
-##			if lead_y >= randCigY and lead_y <= randCigY + cigThickness:
-##				print('pufffffff')
-##				snakeLength += 1
-##				randCigX = round(random.randrange(0, display_width - block_size)) # / 10.0)   * 10.0
-##				randCigY = round(random.randrange(0, display_height - block_size)) # / 10.0)  * 10.0
-		
-
-		
+		# cig1 logic
 		if lead_x > randCigX and lead_x < randCigX + cigThickness or lead_x + block_size > randCigX and lead_x + block_size < randCigX + cigThickness:
 			
 			if lead_y > randCigY and lead_y < randCigY + cigThickness:
@@ -355,7 +379,29 @@ def gameLoop():
 
 			elif lead_y + block_size > randCigY and lead_y + block_size < randCigY + cigThickness:
 				snakeLength += 1
-				rrandCigX, randCigY = randItemGen()
+				randCigX, randCigY = randItemGen()
+
+		# cig2 logic
+		if lead_x > randCig2X and lead_x < randCig2X + cigThickness or lead_x + block_size > randCig2X and lead_x + block_size < randCig2X + cigThickness:
+			
+			if lead_y > randCig2Y and lead_y < randCig2Y + cigThickness:
+				snakeLength += 1
+				randCig2X, randCig2Y = randCig2Gen()
+
+			elif lead_y + block_size > randCig2Y and lead_y + block_size < randCig2Y + cigThickness:
+				snakeLength += 1
+				randCig2X, randCig2Y = randCig2Gen()
+		
+		# modafinil logic
+		if lead_x > randModaX and lead_x < randModaX + modafinilThickness or lead_x + block_size > randModaX and lead_x + block_size < randModaX + modafinilThickness:
+			
+			if lead_y > randModaY and lead_y < randModaY + modafinilThickness:
+				snakeLength += 2
+				randModaX, randModaX = randModafinilGen()
+
+			elif lead_y + block_size > randModaY and lead_y + block_size < randModaY + modafinilThickness:
+				snakeLength += 2
+				randModaX, randModaY = randModafinilGen()
 
 
 
