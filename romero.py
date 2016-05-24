@@ -244,7 +244,7 @@ def snakemero(block_size, snakeList):
 	gameDisplay.blit(head, (snakeList[-1][0], snakeList[-1][1]))
 
 	for XnY in snakeList[:-1]:
-		pygame.draw.rect(gameDisplay,romeroColor,[XnY[0],XnY[1],block_size,block_size])   # replace this
+		pygame.draw.rect(gameDisplay,red,[XnY[0],XnY[1],block_size,block_size])   # replace this
 
 # redundant text object passthrough
 def text_objects(text, color, size):
