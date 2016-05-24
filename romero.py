@@ -1,6 +1,24 @@
+# TODO: 
+
+# record and add sounds for pickups
+
+# modafinil temporarily changes fps
+
+# UI easter eggs in main game window
+
+# fix the gameover to main menu problem
+
+# add 'click to continue' function to Game Over Menu
+
+# add different events for when you reach different scores
+
+# add highscores *** BONUS upload score to server to compare with other players
+
+
 import pygame
 import time
 import random
+
 
 # boiler plate for all pygame calls
 pygame.init()
