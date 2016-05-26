@@ -59,6 +59,9 @@ cig1 = pygame.image.load('cig1.png')
 cig2 = pygame.image.load('cig2.png')
 cig3 = pygame.image.load('cig3.png')
 cig4 = pygame.image.load('cig4.png')
+randomCiggy = [cig1, cig2, cig3, cig4]
+cig5 = random.choice(randomCiggy)
+
 
 cigList = [cig1, cig2, cig3, cig4]
 
@@ -247,6 +250,11 @@ def randCig4Gen():
 	randCig4Y = round(random.randrange(0, display_height - cigThickness))
 	return randCig4X, randCig4Y
 
+def randCig5Gen():
+	randCig5X = round(random.randrange(0, display_width - cigThickness))
+	randCig5Y = round(random.randrange(0, display_height - cigThickness))
+	return randCig5X, randCig5Y
+
 def randModafinilGen():
 	randModaX = round(random.randrange(0, display_width - modafinilThickness))
 	randModaY = round(random.randrange(0, display_height - modafinilThickness))
@@ -325,6 +333,7 @@ def gameLoop():
 	randCig2X, randCig2Y = randCig2Gen()
 	randCig3X, randCig3Y = randCig3Gen()
 	randCig4X, randCig4Y = randCig4Gen()
+	randCig5X, randCig5Y = randCig5Gen()
 	randCanaX, randCanaY = randCanaGen()
 
 	
@@ -399,6 +408,7 @@ def gameLoop():
 		gameDisplay.blit(cig2, (randCig2X, randCig2Y))
 		gameDisplay.blit(cig3, (randCig3X, randCig3Y))
 		gameDisplay.blit(cig4, (randCig4X, randCig4Y))
+		gameDisplay.blit(cig5, (randCig5X, randCig5Y))
 		gameDisplay.blit(cana, (randCanaX, randCanaY))
 
 		
@@ -469,6 +479,17 @@ def gameLoop():
 			elif lead_y + block_size > randCig4Y and lead_y + block_size < randCig4Y + cigThickness:
 				snakeLength += 1
 				randCig4X, randCig4Y = randCig4Gen()
+
+		# cig5 logic
+		if lead_x > randCig5X and lead_x < randCig5X + cigThickness or lead_x + block_size > randCig5X and lead_x + block_size < randCig5X + cigThickness:
+			
+			if lead_y > randCig5Y and lead_y < randCig5Y + cigThickness:
+				snakeLength += 1
+				randCig5X, randCig5Y = randCig5Gen()
+
+			elif lead_y + block_size > randCig5Y and lead_y + block_size < randCig5Y + cigThickness:
+				snakeLength += 1
+				randCig5X, randCig5Y = randCig5Gen()
 
 		
 		# modafinil logic
