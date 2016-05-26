@@ -2,13 +2,19 @@
 
 # record and add sounds for pickups
 
-# modafinil temporarily changes fps
+# add a fps slowdown item  such as a liquer de caña 
+
+# add sprite to the romero body instead of just a red rect blit
+
+# finish title screen png
 
 # UI easter eggs in main game window
 
 # fix the gameover to main menu problem
 
 # add 'click to continue' function to Game Over Menu
+
+# fix scores text
 
 # add different events for when you reach different scores
 
@@ -23,6 +29,7 @@ import random
 # boiler plate for all pygame calls
 pygame.init()
 pygame.mixer.init()
+
 
 # pallette for the game 
 turquoise1 = (0,245,255)
@@ -39,7 +46,7 @@ display_width = 800
 display_height = 600
  
 # create the display or "Canvas" and title screen 
-gameDisplay = pygame.display.set_mode((display_width,display_height))
+gameDisplay = pygame.display.set_mode((display_width,display_height),pygame.NOFRAME)
 pygame.display.set_caption('Snakemero')
 
 # game UI/OS icon
@@ -59,6 +66,9 @@ cigList = [cig1, cig2, cig3, cig4]
 
 # modafinil
 modafinil = pygame.image.load('modafinil.png')
+
+# liquer de cana 
+cana = pygame.image.load('cana.png')
 
 
 # UI images
@@ -83,19 +93,21 @@ controlScreen = pygame.image.load('controls.png')
 # loading sounds
 slug = pygame.mixer.Sound('slug.ogg')
 scream = pygame.mixer.Sound('scream.ogg')
+heartB = pygame.mixer.Sound('heartB.ogg')
 
 
 
 #thickness of objects  
 cigThickness = 24
 modafinilThickness = 24
+canaThickness = 24
 
 #player block size
 block_size = 16
 
 
 
-FPS = 25
+FPS = 18
 
 clock = pygame.time.Clock()
 
@@ -217,15 +229,10 @@ def score(score):
 
 
 
-def randItemGen():
+def randItemGen(): # cig1 gen
 	randCigX = round(random.randrange(0, display_width - cigThickness)) # / 10.0)   * 10.0
 	randCigY = round(random.randrange(0, display_height - cigThickness)) # / 10.0)  * 10.0
 	return randCigX, randCigY
-
-def randModafinilGen():
-	randModaX = round(random.randrange(0, display_width - modafinilThickness))
-	randModaY = round(random.randrange(0, display_height - modafinilThickness))
-	return randModaX, randModaY
 
 def randCig2Gen():
 	randCig2X = round(random.randrange(0, display_width - cigThickness))
@@ -241,6 +248,17 @@ def randCig4Gen():
 	randCig4X = round(random.randrange(0, display_width - cigThickness))
 	randCig4Y = round(random.randrange(0, display_height - cigThickness))
 	return randCig4X, randCig4Y
+
+def randModafinilGen():
+	randModaX = round(random.randrange(0, display_width - modafinilThickness))
+	randModaY = round(random.randrange(0, display_height - modafinilThickness))
+	return randModaX, randModaY
+
+
+def randCanaGen():
+	randCanaX = round(random.randrange(0, display_width - canaThickness))
+	randCanaY = round(random.randrange(0, display_height - canaThickness))
+	return randCanaX, randCanaY
 
 
 
@@ -291,7 +309,7 @@ def gameLoop():
 	pygame.mixer.music.play(-1,0.0)
 
 	global direction
-
+	global FPS
 	gameExit = False
 	gameOver = False
 
@@ -309,11 +327,13 @@ def gameLoop():
 	randCig2X, randCig2Y = randCig2Gen()
 	randCig3X, randCig3Y = randCig3Gen()
 	randCig4X, randCig4Y = randCig4Gen()
+	randCanaX, randCanaY = randCanaGen()
 
 	
 	while not gameExit:
 
 		while gameOver == True:
+			FPS = 18
 			gameDisplay.blit(gameover, (0,0))
 			pygame.display.update()
 
@@ -381,6 +401,8 @@ def gameLoop():
 		gameDisplay.blit(cig2, (randCig2X, randCig2Y))
 		gameDisplay.blit(cig3, (randCig3X, randCig3Y))
 		gameDisplay.blit(cig4, (randCig4X, randCig4Y))
+		gameDisplay.blit(cana, (randCanaX, randCanaY))
+
 		
 		snakeHead = []
 		snakeHead.append(lead_x)
@@ -455,12 +477,34 @@ def gameLoop():
 		if lead_x > randModaX and lead_x < randModaX + modafinilThickness or lead_x + block_size > randModaX and lead_x + block_size < randModaX + modafinilThickness:
 			
 			if lead_y > randModaY and lead_y < randModaY + modafinilThickness:
-				snakeLength += 2
+				snakeLength += 4
+				FPS +=2
 				randModaX, randModaX = randModafinilGen()
 
 			elif lead_y + block_size > randModaY and lead_y + block_size < randModaY + modafinilThickness:
-				snakeLength += 2
+				snakeLength += 4
+				heartB.play()
+				FPS +=2
 				randModaX, randModaY = randModafinilGen()
+
+		# cana logic
+		if lead_x > randCanaX and lead_x < randCanaX + canaThickness or lead_x + block_size > randCanaX and lead_x + block_size < randCanaX + canaThickness:
+			
+			if lead_y > randCanaY and lead_y < randCanaY + canaThickness:
+				snakeLength += 1
+				if FPS > 10:
+					FPS -= 1
+					randCanaX, randCanaX = randCanaGen()
+				else:
+					randCanaX, randCanaX = randCanaGen()
+
+			elif lead_y + block_size > randCanaY and lead_y + block_size < randCanaY + canaThickness:
+				snakeLength += 1
+				if FPS > 10:
+					FPS -= 1
+					randCanaX, randCanaX = randCanaGen()
+				else:
+					randCanaX, randCanaY = randCanaGen()
 
 
 
