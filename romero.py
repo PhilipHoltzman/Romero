@@ -2,8 +2,6 @@
 
 # record and add sounds for pickups
 
-# add a fps slowdown item  such as a liquer de caña 
-
 # add sprite to the romero body instead of just a red rect blit
 
 # finish title screen png
@@ -478,6 +476,7 @@ def gameLoop():
 			
 			if lead_y > randModaY and lead_y < randModaY + modafinilThickness:
 				snakeLength += 4
+				heartB.play()
 				FPS +=2
 				randModaX, randModaX = randModafinilGen()
 
