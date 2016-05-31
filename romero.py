@@ -1,7 +1,5 @@
 # TODO: 
 
-# record and add sounds for pickups
-
 # add sprite to the romero body instead of just a red rect blit
 
 # finish title screen png
@@ -17,6 +15,14 @@
 # add different events for when you reach different scores
 
 # add highscores *** BONUS upload score to server to compare with other players
+
+# deny reversal
+
+# fix x11 bug thing for mac
+
+# remove all the hardcoded bullshit
+
+
 
 
 import pygame
@@ -54,6 +60,9 @@ pygame.display.set_icon(icon)
 #snakehead
 rhead = pygame.image.load('head.png')
 
+#snake body
+snakePart = pygame.image.load('snakePart.png')
+
 #cig images
 cig1 = pygame.image.load('cig1.png')
 cig2 = pygame.image.load('cig2.png')
@@ -89,13 +98,14 @@ gameover = pygame.image.load('gameover.png')
 titleScreen = pygame.image.load('title.png')
 controlScreen = pygame.image.load('controls.png')
 
-
-
 # loading sounds
 slug = pygame.mixer.Sound('slug.ogg')
 scream = pygame.mixer.Sound('scream.ogg')
 heartB = pygame.mixer.Sound('heartB.ogg')
-
+cough1 = pygame.mixer.Sound('cough1.ogg')
+cough2 = pygame.mixer.Sound('cough2.ogg')
+cough3 = pygame.mixer.Sound('cough3.ogg')
+drink = pygame.mixer.Sound('drink.ogg')
 
 
 #thickness of objects  
@@ -190,7 +200,6 @@ def game_intro():
 		if 406  < cursor[0] < 598 and 425  < cursor[1] < 469:
 			gameDisplay.blit(playButtonMod, (406,425))
 			if click[0] == 1:
-				print('play')
 				intro = False
 		else:
 			gameDisplay.blit(playButton, (406,425))
@@ -203,7 +212,6 @@ def game_intro():
 		if 628  < cursor[0] < 752 and 397  < cursor[1] < 524:
 			gameDisplay.blit(quitButtonMod, (628,397))
 			if click[0] == 1:
-				print('quit')
 				pygame.quit()
 				quit()
 		else:
@@ -213,7 +221,6 @@ def game_intro():
 		if 404  < cursor[0] < 604 and 488  < cursor[1] < 516:
 			gameDisplay.blit(controlButtonMod, (404,488))
 			if click[0] == 1:
-				print('controls')
 				gameDisplay.blit(controlScreen, (0,0))
 
 
@@ -441,10 +448,12 @@ def gameLoop():
 			
 			if lead_y > randCigY and lead_y < randCigY + cigThickness:
 				snakeLength += 1
+				cough1.play()
 				randCigX, randCigY = randItemGen()
 
 			elif lead_y + block_size > randCigY and lead_y + block_size < randCigY + cigThickness:
 				snakeLength += 1
+				cough2.play()
 				randCigX, randCigY = randItemGen()
 
 		# cig2 logic
@@ -452,10 +461,12 @@ def gameLoop():
 			
 			if lead_y > randCig2Y and lead_y < randCig2Y + cigThickness:
 				snakeLength += 1
+				cough3.play()
 				randCig2X, randCig2Y = randCig2Gen()
 
 			elif lead_y + block_size > randCig2Y and lead_y + block_size < randCig2Y + cigThickness:
 				snakeLength += 1
+				cough1.play()
 				randCig2X, randCig2Y = randCig2Gen()
 
 		# cig3 logic
@@ -463,10 +474,12 @@ def gameLoop():
 			
 			if lead_y > randCig3Y and lead_y < randCig3Y + cigThickness:
 				snakeLength += 1
+				cough2.play()
 				randCig3X, randCig3Y = randCig3Gen()
 
 			elif lead_y + block_size > randCig3Y and lead_y + block_size < randCig3Y + cigThickness:
 				snakeLength += 1
+				cough3.play()
 				randCig3X, randCig3Y = randCig3Gen()
 
 		# cig4 logic
@@ -474,10 +487,12 @@ def gameLoop():
 			
 			if lead_y > randCig4Y and lead_y < randCig4Y + cigThickness:
 				snakeLength += 1
+				cough3.play()
 				randCig4X, randCig4Y = randCig4Gen()
 
 			elif lead_y + block_size > randCig4Y and lead_y + block_size < randCig4Y + cigThickness:
 				snakeLength += 1
+				cough2.play()
 				randCig4X, randCig4Y = randCig4Gen()
 
 		# cig5 logic
@@ -485,10 +500,12 @@ def gameLoop():
 			
 			if lead_y > randCig5Y and lead_y < randCig5Y + cigThickness:
 				snakeLength += 1
+				cough1.play()
 				randCig5X, randCig5Y = randCig5Gen()
 
 			elif lead_y + block_size > randCig5Y and lead_y + block_size < randCig5Y + cigThickness:
 				snakeLength += 1
+				cough2.play()
 				randCig5X, randCig5Y = randCig5Gen()
 
 		
@@ -512,6 +529,7 @@ def gameLoop():
 			
 			if lead_y > randCanaY and lead_y < randCanaY + canaThickness:
 				snakeLength += 1
+				drink.play()
 				if FPS > 10:
 					FPS -= 1
 					randCanaX, randCanaX = randCanaGen()
@@ -520,6 +538,7 @@ def gameLoop():
 
 			elif lead_y + block_size > randCanaY and lead_y + block_size < randCanaY + canaThickness:
 				snakeLength += 1
+				drink.play()
 				if FPS > 10:
 					FPS -= 1
 					randCanaX, randCanaX = randCanaGen()
